@@ -34,7 +34,7 @@ if($operation == "add"){
         echo "appId不存在!\n";
         die;
     }
-    echo $authorizedKeys[$appId];
+    echo $authorizedKeys[$appId]."\n";
 }
 die;
 
