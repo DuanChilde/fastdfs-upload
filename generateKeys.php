@@ -1,4 +1,6 @@
 <?php
+require_once "signValidation.php";
+
 
 if($argc <3){
     echo "请输入appId和操作指令(add,del,get)!\n";
@@ -40,6 +42,19 @@ if($operation == "add"){
         die;
     }
     echo $authorizedKeys[$appId]."\n";
+}elseif($operation == "sign"){
+    if(!array_key_exists($appId,$authorizedKeys)){
+        echo "appId不存在!\n";
+        die;
+    }
+    if(!isset($argv[3])){
+        echo "请输入IP!\n";
+        die;
+    }
+    $ip = $argv[3];
+    $signValidation = new SignValidation();
+    $sign = $signValidation->generate(['appId'=>$appId,'appSecret'=>$authorizedKeys[$appId],'ip'=>$ip]);
+    echo $sign."\n";
 }
 die;
 
