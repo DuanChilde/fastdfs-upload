@@ -17,13 +17,13 @@ class FileUpload{
     {
         if(!$_FILES || false == isset($_FILES["upFile"]))
         {
-            throw new UploadException("upFile is not set",10100);
+            throw new Exception("upFile is not set",10100);
         }
 
         $file = $_FILES["upFile"];
         if (false == isset($file['tmp_name']) || false == is_file($file['tmp_name']))
         {
-            throw new UploadException("tmp_name is not file",10101);
+            throw new Exception("tmp_name is not file",10101);
         }
         if (0 == filesize($file['tmp_name']))
         {
