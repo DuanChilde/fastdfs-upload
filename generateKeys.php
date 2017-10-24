@@ -7,6 +7,11 @@ if($argc <3){
 $appId = $argv[1];
 $operation = $argv[2];
 
+$keyFile = fopen("authorizedKeys.php", "r");
+if(!$keyFile){
+    fwrite($keyFile,"<?php\n return array();");
+    fclose($keyFile);
+}
 $authorizedKeys = include "authorizedKeys.php";
 if($operation == "add"){
     if(array_key_exists($appId,$authorizedKeys)){
@@ -14,7 +19,6 @@ if($operation == "add"){
         die;
     }
     $authorizedKeys[$appId] = md5(uniqid());
-
     $keyFile = fopen("authorizedKeys.php", "w") or die("Unable to open file!");
     fwrite($keyFile,"<?php\n return ".var_export($authorizedKeys, true).";");
     fclose($keyFile);
