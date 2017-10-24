@@ -7,10 +7,11 @@ if($argc <3){
 $appId = $argv[1];
 $operation = $argv[2];
 
-$keyFile = fopen("authorizedKeys.php", "r");
-if(!$keyFile){
-    fwrite($keyFile,"<?php\n return array();");
-    fclose($keyFile);
+$filename = "authorizedKeys.php";
+if(!file_exists($filename)){
+    $fp = fopen($filename, "w");
+    fwrite($fp,"<?php\n return array();");
+    fclose($fp);
 }
 $authorizedKeys = include "authorizedKeys.php";
 if($operation == "add"){
@@ -19,7 +20,7 @@ if($operation == "add"){
         die;
     }
     $authorizedKeys[$appId] = md5(uniqid());
-    $keyFile = fopen("authorizedKeys.php", "w") or die("Unable to open file!");
+    $keyFile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($keyFile,"<?php\n return ".var_export($authorizedKeys, true).";");
     fclose($keyFile);
     echo $authorizedKeys[$appId]."\n";
@@ -29,10 +30,10 @@ if($operation == "add"){
         die;
     }
     unset($authorizedKeys[$appId]);
-    $keyFile = fopen("authorizedKeys.php", "w") or die("Unable to open file!");
+    $keyFile = fopen($filename, "w") or die("Unable to open file!");
     fwrite($keyFile,"<?php\n return ".var_export($authorizedKeys, true).";");
     fclose($keyFile);
-    echo "del success";
+    echo "del success\n";
 }elseif($operation == "get"){
     if(!array_key_exists($appId,$authorizedKeys)){
         echo "appId不存在!\n";
