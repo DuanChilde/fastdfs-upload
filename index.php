@@ -3,28 +3,30 @@
 include "fileUpload.php";
 include "signValidation.php";
 
+$ret = ['code'=>0,'data'=>[],'error'=>''];
 if(!isset($_REQUEST['appId']) || !isset($_REQUEST['sign'])){
-    echo "参数错误";
+    $ret['code'] = 1;
+    $ret['error'] = "参数错误";
+    echo json_encode($ret);
     die;
 }
 $appId = $_REQUEST['appId'];
 $sign = $_REQUEST['sign'];
 $ip = getonlineip();
-//校验权限
-$signValidation = new SignValidation();
-$ret = $signValidation->signVerify($ip,['appId'=>$appId,'sign'=>$sign]);
-if(!$ret){
-    echo "签名不正确";
-    die;
-}
-//上传
+
 try{
+    //校验
+    $signValidation = new SignValidation();
+    $signValidation->signVerify($ip,['appId'=>$appId,'sign'=>$sign]);
+    //上传
     $fileUpload = new FileUpload();
-    $fileUpload->uploadAttach();
-}catch(UploadException $e){
-    echo $e->getMessage();
-    die;
+    $ret['data'] = $fileUpload->uploadAttach();
+}catch(\Exception $e){
+    $ret['code'] = $e->getCode();
+    $ret['error'] = $e->getMessage();
 }
+echo json_encode($ret);
+die;
 
 function getonlineip(){//获取用户ip
     if($_SERVER['HTTP_CLIENT_IP'])

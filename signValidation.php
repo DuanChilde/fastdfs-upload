@@ -6,6 +6,7 @@
  * Time: 下午6:17
  */
 
+include "signException.php";
 
 class SignValidation{
 
@@ -15,7 +16,7 @@ class SignValidation{
     public function generate($array){
         if(!$array['appId'] || !$array['appSecret'] || !$array['ip'])
         {
-            throw new Exception("参数缺失");
+            throw new SignException("参数不完整",10000);
         }
         ksort($array);
         $string="";
@@ -34,11 +35,11 @@ class SignValidation{
     public function signVerify($ip,$array){
         $newarray=array();
         if(!$array['appId']){
-            return false;
+            throw new SignException("参数appId缺失",10001);
         }
         $authorizedKeys = include_once "authorizedKeys.php";
         if(!array_key_exists($array['appId'],$authorizedKeys)){
-            return false;
+            throw new SignException("非法appId",10002);
         }
         $newarray["appSecret"]= $authorizedKeys[$array['appId']];
         $newarray['ip'] = $ip;
@@ -49,10 +50,10 @@ class SignValidation{
             }
         }
         $sign=$this->generate($newarray);
-        if($sign == $array["sign"]){
-            return true;
+        if($sign != $array["sign"]){
+            throw new SignException("签名不正确",10003);
         }
-        return false;
+        return true;
     }
 
 

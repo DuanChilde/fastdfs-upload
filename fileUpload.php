@@ -17,17 +17,17 @@ class FileUpload{
     {
         if(!$_FILES || false == isset($_FILES["upFile"]))
         {
-            throw new UploadException("upFile is not set",1);
+            throw new UploadException("upFile is not set",10100);
         }
 
         $file = $_FILES["upFile"];
         if (false == isset($file['tmp_name']) || false == is_file($file['tmp_name']))
         {
-            throw new UploadException("tmp_name is not file",2);
+            throw new UploadException("tmp_name is not file",10101);
         }
         if (0 == filesize($file['tmp_name']))
         {
-            throw new UploadException("tmp_name filesize is 0",3);
+            throw new UploadException("tmp_name filesize is 0",10102);
         }
         $curlFile = new CurlFile($file['tmp_name'], $file['type'], $file['name']);
         $fileSuffix = $this->getSuffix($curlFile->getPostFilename());

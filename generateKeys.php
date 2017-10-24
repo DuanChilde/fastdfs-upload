@@ -7,20 +7,24 @@ if($argc <3){
 $appId = $argv[1];
 $operation = $argv[2];
 
+$path = "authorizer";
 $filename = "authorizedKeys.php";
-if(!file_exists($filename)){
-    $fp = fopen($filename, "w");
+if (!is_dir($path)){
+    mkdir($path,0777);
+}
+if(!file_exists($path."/".$filename)){
+    $fp = fopen($path."/".$filename, "w");
     fwrite($fp,"<?php\n return array();");
     fclose($fp);
 }
-$authorizedKeys = include "authorizedKeys.php";
+$authorizedKeys = include $path."/"."authorizedKeys.php";
 if($operation == "add"){
     if(array_key_exists($appId,$authorizedKeys)){
         echo "appId重复!\n";
         die;
     }
     $authorizedKeys[$appId] = md5(uniqid());
-    $keyFile = fopen($filename, "w") or die("Unable to open file!");
+    $keyFile = fopen($path."/".$filename, "w") or die("Unable to open file!");
     fwrite($keyFile,"<?php\n return ".var_export($authorizedKeys, true).";");
     fclose($keyFile);
     echo $authorizedKeys[$appId]."\n";
@@ -30,7 +34,7 @@ if($operation == "add"){
         die;
     }
     unset($authorizedKeys[$appId]);
-    $keyFile = fopen($filename, "w") or die("Unable to open file!");
+    $keyFile = fopen($path."/".$filename, "w") or die("Unable to open file!");
     fwrite($keyFile,"<?php\n return ".var_export($authorizedKeys, true).";");
     fclose($keyFile);
     echo "del success\n";
