@@ -3,18 +3,27 @@
 include "fileUpload.php";
 include "signValidation.php";
 
-var_dump(getonlineip());
-var_dump($_REQUEST);die;
+if(!isset($_REQUEST['appId']) || !isset($_REQUEST['sign'])){
+    echo "参数错误";
+    die;
+}
+$appId = $_REQUEST['appId'];
+$sign = $_REQUEST['sign'];
+$ip = getonlineip();
 //校验权限
 $signValidation = new SignValidation();
-//$sign = $signValidation->generate(['appId'=>'duanwei','appSecret'=>'87220d3428db2ef3a594d6abe02e0ef6','ip'=>'127.0.0.1']);
-$ret = $signValidation->signVerify('127.0.0.1',['appId'=>'duanwei','sign'=>'ed3d8eb792daf82734d5e53dcb713c54']);
+$ret = $signValidation->signVerify($ip,['appId'=>$appId,'sign'=>$sign]);
+if(!$ret){
+    echo "签名不正确";
+    die;
+}
 //上传
 try{
     $fileUpload = new FileUpload();
     $fileUpload->uploadAttach();
 }catch(UploadException $e){
-    var_dump($e->getMessage());die;
+    echo $e->getMessage();
+    die;
 }
 
 function getonlineip(){//获取用户ip
