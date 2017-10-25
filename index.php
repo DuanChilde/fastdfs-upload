@@ -17,7 +17,7 @@ $sendTime = $_REQUEST['time'];
 try{
     //校验
     $signValidation = new SignValidation();
-    $signValidation->signVerify($ip,['appId'=>$appId,'sign'=>$sign]);
+    $signValidation->signVerify($sendTime,['appId'=>$appId,'sign'=>$sign]);
     //上传
     $fileUpload = new FileUpload();
     $ret['data'] = $fileUpload->uploadAttach();
