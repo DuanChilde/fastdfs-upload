@@ -12,7 +12,7 @@ if(!isset($_REQUEST['appId']) || !isset($_REQUEST['sign'])){
 }
 $appId = $_REQUEST['appId'];
 $sign = $_REQUEST['sign'];
-$ip = getonlineip();
+$sendTime = $_REQUEST['time'];
 
 try{
     //校验
@@ -28,18 +28,3 @@ try{
 echo json_encode($ret);
 die;
 
-function getonlineip(){//获取用户ip
-    if($_SERVER['HTTP_CLIENT_IP'])
-    {
-        $onlineip=$_SERVER['HTTP_CLIENT_IP']; //用户IP
-    }
-    else if($_SERVER['HTTP_X_FORWARDED_FOR'])
-    {
-        $onlineip=$_SERVER['HTTP_X_FORWARDED_FOR']; //代理IP
-    }
-    else
-    {
-        $onlineip=$_SERVER['REMOTE_ADDR']; //服务器IP
-    }
-    return $onlineip;
-}

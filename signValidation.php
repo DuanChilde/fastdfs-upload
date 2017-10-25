@@ -14,7 +14,7 @@ class SignValidation{
     *  生成签名,根据appid，appsecret，ip排序，然后拼接md5
     */
     public function generate($array){
-        if(!$array['appId'] || !$array['appSecret'] || !$array['ip'])
+        if(!$array['appId'] || !$array['appSecret'] || !$array['time'])
         {
             throw new Exception("参数不完整",10000);
         }
@@ -32,7 +32,7 @@ class SignValidation{
      * @param $array
      * @return bool
      */
-    public function signVerify($ip,$array){
+    public function signVerify($sendTime,$array){
         $newarray=array();
         if(!$array['appId']){
             throw new Exception("参数appId缺失",10001);
@@ -42,7 +42,7 @@ class SignValidation{
             throw new Exception("非法appId",10002);
         }
         $newarray["appSecret"]= $authorizedKeys[$array['appId']];
-        $newarray['ip'] = $ip;
+        $newarray['time'] = $sendTime;
         reset($array);
         while(list($key,$val) = each($array)){
             if($key != "sign" ){

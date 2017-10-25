@@ -48,12 +48,12 @@ if($operation == "add"){
         die;
     }
     if(!isset($argv[3])){
-        echo "请输入IP!\n";
+        echo "请输入时间戳\n";
         die;
     }
-    $ip = $argv[3];
+    $sendTime = $argv[3];
     $signValidation = new SignValidation();
-    $sign = $signValidation->generate(['appId'=>$appId,'appSecret'=>$authorizedKeys[$appId],'ip'=>$ip]);
+    $sign = $signValidation->generate(['appId'=>$appId,'appSecret'=>$authorizedKeys[$appId],'time'=>$sendTime]);
     echo $sign."\n";
 }
 die;
