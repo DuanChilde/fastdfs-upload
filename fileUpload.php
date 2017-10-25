@@ -15,12 +15,12 @@ class FileUpload{
      */
     public function uploadAttach()
     {
-        if(!$_FILES || false == isset($_FILES["upFile"]))
+        if(!$_FILES || false == isset($_FILES["file"]))
         {
-            throw new Exception("upFile is not set",10100);
+            throw new Exception("file is not set",10100);
         }
 
-        $file = $_FILES["upFile"];
+        $file = $_FILES["file"];
         if (false == isset($file['tmp_name']) || false == is_file($file['tmp_name']))
         {
             throw new Exception("tmp_name is not file",10101);
